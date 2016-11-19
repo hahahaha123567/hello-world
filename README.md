@@ -1,8 +1,1 @@
-//hello-world
-//My first repository
-#include<stdio.h>
-int main(void)
-{
-  printf("Hello world\n");
-  printf("Fuck Bian Song\n");
-}
+This is a noob who is learning how to use GitHub
