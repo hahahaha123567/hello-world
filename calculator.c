@@ -1,3 +1,5 @@
+//A little calculator which just support add/sub/mul/div, and '#' to end the formula
+
 #include <stdio.h>
 #include <stdlib.h>
 
