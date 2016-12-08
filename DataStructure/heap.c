@@ -57,7 +57,7 @@ int delete(heap H)
 
 	temp = H -> element[1];
 	last = H -> element[H -> size];
-	for(parent = 1; parent * 2 <= H -> size; parent *= 2){
+	for(parent = 1; parent * 2 <= H -> size; parent = child){
 		child = parent * 2;
 		if(child < H -> size && H -> element[child] > H -> element[child + 1])
 			child++;
