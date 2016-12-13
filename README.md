@@ -1,1 +1,1 @@
-This is a noob who is learning how to use GitHub
+This is a noob learning how to use GitHub
