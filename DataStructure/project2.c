@@ -183,10 +183,9 @@ void Calc(Graph G, Path* P, Vertex V, int count)
 	int Send = 0, Take = 0, i, nico;
 
 	TempPath[count] = V;
-	if(V){
+	if(V)
 		for(int i = 0; i < P[V].ParentNumber; i++)
 			Calc(G, P, P[V].Parent[i], count + 1);
-	}
 	else{
 		for(int i = 0; i < count; i++){
 			if(G -> Bikes[TempPath[i]] < G -> Capacity / 2)

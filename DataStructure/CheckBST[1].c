@@ -1,3 +1,15 @@
+/*
+Given a binary tree, you are supposed to tell if it is a binary search tree. 
+If the answer is yes, try to find the KK-th largest key, else try to find the height of the tree.
+The function CheckBST is supposed to return the K-th largest key if T is a binary search tree; 
+or if not, return the negative height of T (for example, if the height is 5, you must return −5).
+Here the height of a leaf node is defined to be 1. 
+T is not empty and all its keys are positive integers. 
+K is positive and is never more than the total number of nodes in the tree.
+
+**judge a tree is a Binary Search Tree or not, and calculate its height by recursion**
+**to find the k-th largest node, spread it to an array or a stack is easy**
+*/
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -55,8 +67,7 @@ int height(BinTree T);
 
 int CheckBST ( BinTree T, int K )
 {
-    stack S;
-    S = (stack)malloc(sizeof(struct StackRecord));
+    stack S = malloc(sizeof(struct StackRecord));
     S -> sp = -1;
     if(isBST(T, S) == 1)
         return find(T, K, S);

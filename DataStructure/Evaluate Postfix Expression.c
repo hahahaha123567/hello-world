@@ -1,3 +1,29 @@
+/*
+Write a program to evaluate a postfix expression. 
+You only have to handle four kinds of operators: +, -, x, and /.
+where expr points to a string that stores the postfix expression. 
+It is guaranteed that there is exactly one space between any two operators or operands. 
+The function EvalPostfix is supposed to return the value of the expression. 
+If it is not a legal postfix expression, EvalPostfix must return a special value Infinity which is defined by the judge program.
+
+**it is just a practice of stack**
+**'-' can be either a unary operator or a binocular operator**
+
+Sample Input 1:
+11 -2 5.5 * + 23 7 / -
+
+Sample Output 1:
+-3.285714
+
+Sample Input 2:
+11 -2 5.5 * + 23 0 / -
+
+Sample Output 2:
+ERROR
+*/
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -101,17 +127,12 @@ ElementType EvalPostfix( char *expr )
 void push(ElementType m, stack s)
 {
 	s->array[++(s->top)] = m;
-	//printf("push: %f\n", m);
 }
 
 ElementType pop(stack s)
 {
-	if(s->top == -1){
-		//printf("pop: infinity\n");
+	if(s->top == -1)
 		return Infinity;
-	}
-	else{
-		//printf("pop: %f\n", s->array[s->top]);
+	else
 		return s->array[(s->top)--];
-	}
 }

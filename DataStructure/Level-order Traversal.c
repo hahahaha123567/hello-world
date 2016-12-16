@@ -1,3 +1,13 @@
+/*
+Write a routine to list out the nodes of a binary tree in "level-order". 
+List the root, then nodes at depth 1, followed by nodes at depth 2, and so on. 
+You must do this in linear time.
+
+**a practice of queue**
+**it uses Breadth First Search**
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 

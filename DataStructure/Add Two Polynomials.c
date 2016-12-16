@@ -1,3 +1,22 @@
+/* 
+Write a function to add two polynomials. 
+Do not destroy the input. 
+Use a linked list implementation with a dummy head node. 
+Note: The zero polynomial is represented by an empty list with only the dummy head node. 
+
+**it is just a practice of linked list**
+**judge the 0 input**
+**if a + b == 0, free the node**
+
+Sample Input:
+4
+3 4 -5 2 6 1 -2 0
+3
+5 20 -7 4 3 1
+
+Sample Output:
+5 20 -4 4 -5 2 9 1 -2 0
+*/
 #include <stdio.h>
 #include <stdlib.h>
 typedef struct Node *PtrToNode;
@@ -27,10 +46,10 @@ Polynomial Add( Polynomial a, Polynomial b )
 	Polynomial p1 = a, p2 = b, head = NULL, tail = NULL, ans = NULL;
 	
 	if(p1 == NULL && p2 == NULL){
-    /*	head = (Polynomial)malloc(sizeof(struct Node));
+    	head = (Polynomial)malloc(sizeof(struct Node));
     	head->Coefficient = 0;
     	head->Exponent = 0;
-    	head->Next = NULL;*/
+    	head->Next = NULL;
 	}
     else if(p1 == NULL)
         return p2;
@@ -77,12 +96,12 @@ Polynomial Add( Polynomial a, Polynomial b )
         tail = ans;
 	}
     tail->Next = NULL;
-    /*if(head == NULL){
+    if(head == NULL){
     	head = (Polynomial)malloc(sizeof(struct Node));
     	head->Coefficient = 0;
     	head->Exponent = 0;
     	head->Next = NULL;
-	}*/
+	}
     return head;
 }
 

@@ -1,3 +1,11 @@
+/*
+Two trees, T1 and T2, are isomorphic if T1 can be transformed into T2 by swapping left and right children of (some of the) nodes in T1. 
+For instance, the two trees in Figure 1 are isomorphic because they are the same if the children of A, B, and G, but not the other nodes, are swapped. 
+Give a polynomial time algorithm to decide if two trees are isomorphic.
+
+**recursion**
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
