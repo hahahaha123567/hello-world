@@ -1,1 +1,1 @@
-I wrote them when I am a noob student.
+I wrote them when I was a noob student.
