@@ -1,3 +1,37 @@
+/*
+Write a program to find the topological order in a digraph.
+The topological order is supposed to be stored in TopOrder[] where TopOrder[i] is the i-th vertex in the resulting sequence. 
+The topological sort cannot be successful if there is a cycle in the graph -- in that case TopSort must return false; otherwise return true.
+Notice that the topological order might not be unique, but the judge's input guarantees the uniqueness of the result.
+
+**since input guarantees the uniqueness of the result, the question is simplified a lot**
+
+Sample Input 1
+5 7
+1 0
+4 3
+2 1
+2 0
+3 2
+4 1
+4 2
+Sample Output 1:
+4 3 2 1 0
+Sample Input 2
+5 8
+0 3
+1 0
+4 3
+2 1
+2 0
+3 2
+4 1
+4 2
+Sample Output 2:
+ERROR
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -74,37 +108,37 @@ bool TopSort(LGraph Graph, Vertex TopOrder[])
 {
     Vertex *InDegree;
     PtrToAdjVNode ptr;
-    Vertex ThisGuy, Temp = -1;
-    int index = 0, fuck;
+    Vertex ThisGuy, Flag = 0;
+    int index = 0;
 
+    //initial the array InDegree[]
     InDegree = (Vertex *)malloc(sizeof(Vertex) * Graph -> Nv);
     for(int i = 0; i < Graph -> Nv; i++)
         InDegree[i] = 0;
     for(int i = 0; i < Graph -> Nv; i++)
         for(ptr = Graph -> G[i].FirstEdge; ptr != NULL; ptr = ptr -> Next)
             InDegree[ptr -> AdjV]++;
+    //find the first vertex
+    for(ThisGuy = 0; ThisGuy < Graph -> Nv; ThisGuy++){
+        if(InDegree[ThisGuy] == 0)
+            break;
+    }
+    //if the first vertex is not found
+    if(ThisGuy == Graph -> Nv)
+        return false;
     for(int i = 0; i < Graph -> Nv; i++){
-        if(Temp != -1){
-            fuck = Temp;
-            Temp = -1;
-        }
-        else{
-            for(fuck = 0; fuck < Graph -> Nv; fuck++){
-                if(InDegree[fuck] == 0){
-                    InDegree[fuck] = 1000;
-                    break;
-                }
-            }
-            if(fuck == Graph -> Nv)
-                return false;
-        }
-        TopOrder[index++] = fuck;
-        InDegree[fuck] = -1;
-        for(ptr = Graph -> G[fuck].FirstEdge; ptr != NULL; ptr = ptr -> Next){
+        InDegree[ThisGuy] = -1;         //mark the visited vertex
+        TopOrder[index++] = ThisGuy;    //record the path
+        //every vertex adjacent to ThisGuy, InDegree subtract 1
+        for(ptr = Graph -> G[ThisGuy].FirstEdge; ptr; ptr = ptr -> Next){
             InDegree[ptr -> AdjV]--;
+            //find the next vertex
             if(InDegree[ptr -> AdjV] == 0)
-                Temp = ptr -> AdjV;
+                ThisGuy = ptr -> AdjV;
         }
+        //if(the next vertex isn't found && this function has not finished)
+        if(InDegree[ThisGuy] == -1 && index != Graph -> Nv)
+            return false;
     }
     return true;
 }

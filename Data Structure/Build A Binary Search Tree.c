@@ -1,3 +1,40 @@
+/*
+Given the structure of a binary tree and a sequence of distinct integer keys, 
+there is only one way to fill these keys into the tree so that the resulting tree satisfies the definition of a BST. 
+You are supposed to output the level order traversal sequence of that tree. 
+
+Input Specification:
+Each input file contains one test case. 
+For each case, the first line gives a positive integer N (≤100) which is the total number of nodes in the tree. 
+The next N lines each contains the left and the right children of a node in the format left_index right_index, 
+provided that the nodes are numbered from 0 to N-1, and 0 is always the root. 
+If one child is missing, then -1 will represent the NULL child pointer. 
+Finally N distinct integer keys are given in the last line.
+
+Output Specification:
+For each test case, print in one line the level order traversal sequence of that tree. 
+All the numbers must be separated by a space, with no extra space at the end of the line.
+
+**build a Binary Search Tree by judging -1**
+**sort the input data, and put each of them in order**
+
+Sample Input:
+9
+1 6
+2 3
+-1 -1
+-1 4
+5 -1
+-1 -1
+7 -1
+-1 8
+-1 -1
+73 45 11 58 82 25 67 38 42
+
+Sample Output:
+58 25 82 11 38 67 45 73 42
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #define MAX 10000
@@ -30,9 +67,7 @@ int main(void)
 Tree build()
 {
 	int left, right;
-	Tree haha = NULL;
-
-	haha = (Tree)malloc(sizeof(struct TreeNode));
+	Tree haha = malloc(sizeof(struct TreeNode));
 	haha -> flag = 1;
 	haha -> Left = NULL;
 	haha -> Right = NULL;
@@ -72,33 +107,17 @@ Tree findleast(Tree T)
 		temp = findleast(T -> Left);
 		if(temp)
 			return temp;
-		else if(T -> flag == 1){
-			T -> flag = 0;
-			return T;
-		}
-		else if(T -> Right){
-			temp = findleast(T -> Right);
-			if(temp)
-				return temp;
-			else 
-				return NULL;
-		}
-		else
-			return NULL;
 	}
-	else if(T -> flag == 1){
+	if(T -> flag == 1){
 		T -> flag = 0;
 		return T;
 	}
-	else if(T -> Right){
+	if(T -> Right){
 		temp = findleast(T -> Right);
 		if(temp)
 			return temp;
-		else 
-			return NULL;
 	}
-	else
-		return NULL;
+	return NULL;
 }
 
 void leveltra(Tree T)

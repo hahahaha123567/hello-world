@@ -1,3 +1,27 @@
+/*
+Write the routines to do a "percolate up" and a "percolate down" in a binary min-heap.
+
+**Warning**
+**in the function PercolateDown, after each iteration, parent = child, NOT parent *= 2**
+**I didn't find this bug, and it troubled me later in another program**
+
+Sample Input:
+9
+1 10
+1 5
+1 2
+0
+1 9
+1 1
+1 4
+0
+0
+Sample Output:
+2 1 4 
+Inside H: 5 10 9
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -74,7 +98,7 @@ void PercolateDown( int p, PriorityQueue H )
     int parent, child;
     ElementType temp;
 
-    for(parent = p; parent * 2 <= H ->Size; parent *= 2){
+    for(parent = p; parent * 2 <= H ->Size; parent = child){
         if(parent * 2 + 1 <= H -> Size && H -> Elements[parent * 2 + 1] < H ->Elements[parent * 2])
             child = parent * 2 + 1;
         else
