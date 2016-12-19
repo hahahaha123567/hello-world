@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-#define NUMBER 10
-#define MAX 99
+#define NUMBER 15
 
-void InsertSort(int *a, int n);
+int* Copy(int *a, int n);
+void Print(int *a, int n);
+void InsertionSort(int *a, int n);
 void ShellSort(int *a, int n);
 void HeapSort(int *a, int n);
 void MergeSort(int *a, int n);
@@ -13,54 +13,44 @@ void QuickSort(int *a, int n);
 
 int main(void)
 {
-	int a[NUMBER], b[NUMBER], c[NUMBER], d[NUMBER], e[NUMBER];
+	int *a = malloc(sizeof(int) * NUMBER);
+	int *b, *c, *d, *e;
 
 	srand( (unsigned int)time(0) );
-	printf("Array before sorted:\n");
-	for(int i = 0; i < NUMBER; i++){
-		a[i] = rand() % 100;
-		b[i] = a[i];
-		c[i] = a[i];
-		d[i] = a[i];
-		e[i] = a[i];
-		printf("%d ", a[i]);
-	}
-	printf("\n");
-
-	InsertSort(a, NUMBER);
-	printf("Array after InsertSort:\n");
 	for(int i = 0; i < NUMBER; i++)
-		printf("%d ", a[i]);
-	printf("\n");
+		a[i] = rand() % 100;
+	b = Copy(a, NUMBER);
+	c = Copy(a, NUMBER);
+	d = Copy(a, NUMBER);
+	e = Copy(a, NUMBER);
+
+	printf("Array before sorted:\n");
+	Print(a, NUMBER);
+
+	InsertionSort(a, NUMBER);
+	printf("Array after InsertionSort:\n");
+	Print(a, NUMBER);
 
 	ShellSort(b, NUMBER);
 	printf("Array after ShellSort:\n");
-	for(int i = 0; i < NUMBER; i++)
-		printf("%d ", b[i]);
-	printf("\n");
+	Print(b, NUMBER);
 
-	HeapSort(e, NUMBER);
+	HeapSort(c, NUMBER);
 	printf("Array after HeapSort:\n");
-	for(int i = 0; i < NUMBER; i++)
-		printf("%d ", e[i]);
-	printf("\n");
+	Print(c, NUMBER);
 
-	MergeSort(c, NUMBER);
+	MergeSort(d, NUMBER);
 	printf("Array after MergeSort:\n");
-	for(int i = 0; i < NUMBER; i++)
-		printf("%d ", c[i]);
-	printf("\n");
+	Print(d, NUMBER);
 
-	QuickSort(d, NUMBER);
+	QuickSort(e, NUMBER);
 	printf("Array after QuickSort:\n");
-	for(int i = 0; i < NUMBER; i++)
-		printf("%d ", d[i]);
-	printf("\n");
+	Print(e, NUMBER);
 
 	return 0;
 }
 
-void InsertSort(int *a, int n)
+void InsertionSort(int *a, int n)
 {
 	int compared, inserted, temp;
 
@@ -95,6 +85,10 @@ void ShellSort(int *a, int n)
 		}
 	}
 }
+
+/*
+this version of heapsort: build a new heap by inserting for n times, and delete elements for n times
+it cost double space
 
 typedef struct HeapRecord* heap;
 struct HeapRecord
@@ -159,9 +153,44 @@ int Delete(heap H)
 	H -> element[parent] = last;
 	return temp;
 }
+*/
+
+//this version of heapsort divide the original array to two parts: unsorted and sorted
+# define LeftChild(i) (2 * (i) + 1)
+void PercolateDown(int *a, int data, int size);
+
+void HeapSort(int *a, int n)
+{
+	for (int i = n / 2; i >= 0; i--)
+		PercolateDown(a, i, n);
+	for (int i = n - 1; i > 0 ; i--){
+		int temp = a[0];
+		a[0] = a[i];
+		a[i] = temp;
+		PercolateDown(a, 0, i);
+	}
+}
+
+void PercolateDown(int *a, int data, int size)
+{
+	int parent = data, child = LeftChild(parent);
+
+    for( ; child < size; parent = child, child = LeftChild(parent)){
+        if(child + 1 < size && a[child] < a[child + 1])
+            child++;
+        if(a[parent] < a[child]){
+            int temp = a[parent];
+            a[parent] = a[child];
+            a[child] = temp;
+        }
+        else
+            break;
+    }
+}
 
 /*
-I learned this version of MergeSort from BlackWhite, but it malloc too much memory
+I learned this version of MergeSort from BlackWhite, but it cost too much memory
+
 void MergeSort(int *a, int n)
 {
 	int num_left, num_right, *p_left, *p_right;
@@ -194,7 +223,7 @@ void MergeSort(int *a, int n)
 }
 */
 
-//this version of MergeSort declare an shell function, new a temparray in the shell, so saved a lot of space
+//this version of MergeSort declare an shell function, new a temp array in the shell, so saved a lot of space
 void Divide(int* a, int* TempArray, int left, int right);
 void Merge(int* a, int* TempArray, int left, int left_end, int right_end);
 
@@ -236,6 +265,9 @@ void Merge(int* a, int* TempArray, int left, int left_end, int right_end)
 		a[i] = TempArray[i];
 }
 
+/*
+I learned this version of quick sort from BlackWhite too, 
+
 void QuickSort(int *a, int n)
 {
 	int left = 0, right = n-1, pivot = a[0];
@@ -244,11 +276,11 @@ void QuickSort(int *a, int n)
 		return ;
 	while(left < right)
 	{
-		while(a[right] >= pivot && left < right)
+		while(a[right] > pivot && left < right)
 			right--;
 		if(left < right)
 			a[left] = a[right];
-		while(a[left] <= pivot && left < right)
+		while(a[left] < pivot && left < right)
 			left++;
 		if(left < right)
 			a[right] = a[left];
@@ -256,4 +288,80 @@ void QuickSort(int *a, int n)
 	a[left] = pivot;
 	QuickSort(a, left);
 	QuickSort((a+left+1), n-left-1);
+}
+*/
+
+//a better way of select the pivot and divide the array
+# define CUTOFF 10	//when the number of elements is small enough, choose InsertionSort instead of QuickSort
+void Qsort(int *a, int left, int right);
+int Median3(int *a, int left, int right);
+void Swap(int *a, int *b);
+
+//drive function
+void QuickSort(int *a, int n)
+{
+	Qsort(a, 0, n - 1);
+}
+
+void Qsort(int *a, int left, int right)
+{
+	int pivot, index_left, index_right;
+	//QuickSort
+	if(left + CUTOFF <= right){
+		pivot = Median3(a, left, right);
+		index_left = left;
+		index_right = right - 1;
+		while(1){
+			//**Warning**
+			//the ++ opration must happen whether the value is bog or small
+			//'<' not '<=', unnecessary exchange is better than produce unbalanced subarray if all elements are equal
+			while(a[++index_left] < pivot) ;
+			while(a[--index_right] > pivot) ;
+			if(index_left < index_right)
+				Swap(&a[index_left], &a[index_right]);
+			else
+				break;
+		}
+	}
+	//InsertionSort
+	else
+		InsertionSort(a + left, right - left + 1);
+}
+
+//first: a[left] < a[mid] < a[right]
+//then:	 take a[mid] as pivot, put it in the position [right - 1]
+int Median3(int *a, int left, int right)
+{
+	int mid = (left + right) / 2;
+
+	if(a[left] > a[mid])
+		Swap(&a[left], &a[mid]);
+	if(a[left] > a[right])
+		Swap(&a[left], &a[right]);
+	if(a[mid] > a[right])
+		Swap(&a[mid], &a[right]);
+	Swap(&a[mid], &a[right - 1]);
+	return a[right - 1];
+}
+
+void Swap(int *a, int *b)
+{
+	int temp = *a;
+	*a = *b;
+	*b = temp;
+}
+
+int* Copy(int *a, int n)
+{
+	int *b = malloc(sizeof(int) * n);
+	for (int i = 0; i < n; i++)
+		b[i] = a[i];
+	return b;
+}
+
+void Print(int *a, int n)
+{
+	for (int i = 0; i < n; ++i)
+		printf("%d ", a[i]);
+	printf("\n");
 }
