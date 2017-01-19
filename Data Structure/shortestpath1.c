@@ -63,14 +63,15 @@ void ShortestDist( MGraph Graph, int dist[], int count[], Vertex S )
     int known[MaxVertexNum] = {0};
     int last[MaxVertexNum] = {-1};
     WeightType Mindist;
-    Vertex CurrentVertex = S;
+    Vertex CurrentVertex;
     for(int i = 0; i < Graph -> Nv; i++){
         dist[i] = INFINITY;
         count[i] = 0;
     }
     count[S] = 1;
-
     dist[S] = 0;
+    
+    CurrentVertex = S
     while(niconiconi){
         Mindist = INFINITY;
         for(int i = 0; i < Graph -> Nv; i++)

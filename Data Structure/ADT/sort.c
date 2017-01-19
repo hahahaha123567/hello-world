@@ -322,6 +322,8 @@ void Qsort(int *a, int left, int right)
 			else
 				break;
 		}
+		Qsort(a, left, index_left - 1);
+		Qsort(a, index_right + 1, right);
 	}
 	//InsertionSort
 	else
