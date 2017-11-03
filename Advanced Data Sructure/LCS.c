@@ -1,5 +1,5 @@
 // Dynamic Programming
-// Longest Commen Subsequence
+// Longest Common Subsequence
 
 #include <stdio.h>
 
