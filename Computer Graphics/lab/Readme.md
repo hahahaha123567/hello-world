@@ -1,1 +1,0 @@
-More details at [lab introduction](https://github.com/GraphicsCourseZJU/Exs)
