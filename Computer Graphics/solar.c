@@ -41,6 +41,7 @@ void draw_planet (enum Planet planet)
     glTranslatef(revolution_radius[planet], 0, 0);
     glutSolidSphere(radius[planet]/6, 1000, 1000);
     if (planet == Earth) {
+        // draw moon
         glMaterialfv(GL_FRONT, GL_AMBIENT, white);
         glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
         glMaterialfv(GL_FRONT, GL_SPECULAR, white);
@@ -85,9 +86,11 @@ void display (void)
     }
     glPopMatrix();
 
+    // draw planet
     for (int i = 0; i < 9; ++i) {
         draw_planet(i);
     }
+    
     glutSwapBuffers();
 }
 
