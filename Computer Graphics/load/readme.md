@@ -1,3 +1,13 @@
+# Description
+
+My second glance of three.js (
+
+#### Problems encountered
+
+`three.js` and `OBJloader.js` version mismatch
+
+Since the API of latest version of three.js has changed a lot, the two js file in my project is recommended
+
 # Run
 
 ### Local
@@ -9,7 +19,7 @@
 node ./server.js
 ```
 
-3.  [click here](127.0.0.1/load.html)
+4. [click here](127.0.0.1/load.html)
 
 ### Server
 
@@ -21,8 +31,5 @@ node ./server.js
 
 [dat.gui.js](http://workshop.chromeexperiments.com/examples/gui/#1--Basic-Usage)
 
-# Problems encountered
 
-`three.js` and `OBJloader.js` version mismatch
 
-Since the API of latest version of three.js has changed a lot, the two js file in my project is recommended
