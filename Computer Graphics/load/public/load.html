@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>load</title>
+		<script src="lib/three.js"></script>
+        <script src="lib/OBJLoader.js"></script>
+        <script src="lib/dat.gui.js"></script>
+		<style type="text/css">
+			div#canvas-frame {
+				border: none;
+				cursor: pointer;
+				width: 100%;
+				height: 600px;
+				background-color: #EEEEEE;
+			}
+		</style>
+
+		<script>
+            var width, height;
+            var renderer, camera, scene;
+            var dLight, sLight;
+            var gui, dLightText, sLightText;
+
+            // main
+            function threeStart() {
+                
+                initRenderer();
+                initCamera();
+                initScene();
+                initLight();
+                initObject();
+                initMenu();
+
+                animate();
+            }
+
+            // bind renderer to canvas
+            function initRenderer() { 
+                width = document.getElementById('canvas-frame').clientWidth;
+                height = document.getElementById('canvas-frame').clientHeight;
+
+                // get current canvas size and bind it to renderer
+                renderer = new THREE.WebGLRenderer({
+                    antialias : true,
+                });
+                renderer.setSize(width, height);
+                renderer.setClearColor(0x000000, 1.0);
+
+                // register function, like callback functions in GLUT
+                window.addEventListener( 'resize', onWindowResize, false );
+                document.addEventListener( 'keydown', onKeyDown, false );
+
+                // append renderer to canvas
+                document.getElementById('canvas-frame').appendChild(renderer.domElement);
+            }
+
+            function initCamera() {
+                camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
+                camera.position.x = -600;
+                camera.position.y = -100;
+                camera.position.z = 1200;
+                camera.up.x = 0;
+                camera.up.y = 1;
+                camera.up.z = 0;
+                camera.lookAt({
+                    x : 0,
+                    y : 0,
+                    z : 0
+                });
+            }
+
+            function initScene() {
+                scene = new THREE.Scene();
+            }
+
+            function initLight() {
+                scene.add(new THREE.AmbientLight(0x666666));
+
+                dLight = new THREE.DirectionalLight(0x000000, 1);
+                dLight.position.set(0, 0, 1);
+                scene.add(dLight);
+
+                sLight = new THREE.SpotLight(0xffffff, 1);
+                sLight.position.set(0, 10, 0);
+                scene.add(sLight);
+            }       
+
+            function initObject() {
+                var objColor = [
+                    0xffaa33,           // teaport
+                    0xff0000,           // desktop
+                    0x00ff00,
+                    0xffff00,
+                    0x00ffff,
+                    0x0000ff
+                ];
+                var objPosition = [
+                    [0, 100, 0],        // teaport
+                    [0, 0, 0],          // desktop
+                    [80, -100, -80],
+                    [-80, -100, -80],
+                    [80, -100, 80],
+                    [-80, -100, 80]
+                ];
+
+                // create teaport
+                var teaportMat = new THREE.MeshPhongMaterial( {
+                    color: objColor[0],
+                    specular: 0x333333
+                } );
+                var loader = new THREE.OBJLoader();
+                var obj;
+                loader.load('teaport.obj', function(obj) {
+                    obj.traverse(function(child) {
+                        if (child instanceof THREE.Mesh) {
+                            child.material = teaportMat;
+                            sLight.target = child;
+                        }
+                    });
+                    obj.scale.set(3, 3, 3);
+                    scene.add(obj);
+                });
+
+                // create desktop
+                var desktopGeo = new THREE.CubeGeometry(250, 50, 250);
+                var desktopMat = new THREE.MeshLambertMaterial( { color: 0xFF0000} );
+                var desktop = new THREE.Mesh(desktopGeo, desktopMat); 
+                desktop.position.set(objPosition[1][0], objPosition[1][1], objPosition[1][2]);
+                scene.add(desktop); 
+
+                // create desk legs
+                var legGeo = new THREE.CubeGeometry(50, 150, 50);
+                for (var i = 0; i < 4; ++i) {
+                    var legMat = new THREE.MeshLambertMaterial( {color: objColor[i+2]} )
+                    leg = new THREE.Mesh(legGeo, legMat);
+                    leg.position.set(objPosition[i+2][0], objPosition[i+2][1], objPosition[i+2][2]);
+                    scene.add(leg);
+                }
+            }
+
+            function initMenu() {
+                gui = new dat.GUI();
+
+                dLightText = {
+                    color: [dLight.color.r*255, dLight.color.g*255, dLight.color.b*255],
+                    x: dLight.position.x,
+                    y: dLight.position.y,
+                    z: dLight.position.z
+                };
+                var dLightFolder = gui.addFolder('Direction Light');
+                    dLightFolder.addColor(dLightText, 'color').onChange(change);
+                    var dLightPositionFolder = dLightFolder.addFolder('source position');
+                        dLightPositionFolder.add(dLightText, 'x', -10, 10).onChange(change);
+                        dLightPositionFolder.add(dLightText, 'y', -10, 10).onChange(change);
+                        dLightPositionFolder.add(dLightText, 'z', -10, 10).onChange(change);
+
+                sLightText = {
+                    color: [sLight.color.r*255, sLight.color.g*255, sLight.color.b*255],
+                    position_x: sLight.position.x,
+                    position_y: sLight.position.y,
+                    position_z: sLight.position.z,
+                    angle: sLight.angle
+                }
+                var sLightFolder = gui.addFolder('Spot Light');
+                    sLightFolder.addColor(sLightText, 'color').onChange(change);
+                    sLightFolder.add(sLightText, 'angle', 0, 1.5).onChange(change);
+                    var sLightPositionFolder = sLightFolder.addFolder('source position');
+                        sLightPositionFolder.add(sLightText, 'position_x', -10, 10).onChange(change);
+                        sLightPositionFolder.add(sLightText, 'position_y', -10, 10).onChange(change);
+                        sLightPositionFolder.add(sLightText, 'position_z', -10, 10).onChange(change);
+            }
+            
+            function onKeyDown(event){ 
+                switch (event.keyCode) {
+                    case 87: dLight.position.z--; break; // w
+                    case 83: dLight.position.z++; break; // s
+                    case 65: dLight.position.x--; break; // a
+                    case 68: dLight.position.x++; break; // d
+                    case 90: dLight.position.y++; break; // z
+                    case 67: dLight.position.y--; break; // c
+                    default:
+                }
+                keyboardControl = true;
+                console.log(dLight.position.x, dLight.position.y, dLight.position.z);
+                animate();  
+            }  
+
+            // change light by GUI controller
+            function change() {
+                dLight.color.r = dLightText.color[0];
+                dLight.color.g = dLightText.color[1];
+                dLight.color.b = dLightText.color[2];
+                dLight.position.x = dLightText.x;
+                dLight.position.y = dLightText.y;
+                dLight.position.z = dLightText.z;
+
+                sLight.color.r = sLightText.color[0];
+                sLight.color.g = sLightText.color[1];
+                sLight.color.b = sLightText.color[2];
+                sLight.position.x = sLightText.position_x;
+                sLight.position.y = sLightText.position_y;
+                sLight.position.z = sLightText.position_z;
+                sLight.angle = sLightText.angle;
+                
+                console.log(sLight.position, sLight.target.position);
+                animate();
+            }
+
+            function onWindowResize() {  
+                windowHalfX = window.innerWidth / 2;  
+                windowHalfY = window.innerHeight / 2;  
+              
+                camera.aspect = window.innerWidth / window.innerHeight;  
+                camera.updateProjectionMatrix();  
+              
+                renderer.setSize( window.innerWidth, window.innerHeight );  
+            }  
+
+            function animate() {
+                renderer.clear();
+                renderer.render(scene, camera);
+                
+                requestAnimationFrame( animate );
+            }
+
+		</script>
+	</head>
+
+	<body onload="threeStart();">
+		<div id="canvas-frame"></div>
+	</body>
+</html>
