@@ -13,7 +13,7 @@ node ./server.js
 
 ### Server
 
-[click here]()
+[click here](http://hahahaha123567.github.io/hello-world/Computer%20Graphics/load/public/load.html)
 
 # Lib
 
