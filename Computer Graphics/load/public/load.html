@@ -82,7 +82,7 @@
                 scene.add(dLight);
 
                 sLight = new THREE.SpotLight(0xffffff, 1);
-                sLight.position.set(-10, 10, 10);
+                sLight.position.set(-100, 100, 100);
                 scene.add(sLight);
             }       
 
@@ -157,9 +157,9 @@
 
                 sLightText = {
                     color: [sLight.color.r*255, sLight.color.g*255, sLight.color.b*255],
-                    position_x: sLight.position.x,
-                    position_y: sLight.position.y,
-                    position_z: sLight.position.z,
+                    position_x: sLight.position.x/10,
+                    position_y: sLight.position.y/10,
+                    position_z: sLight.position.z/10,
                     angle: sLight.angle
                 }
                 var sLightFolder = gui.addFolder('Spot Light');
@@ -182,15 +182,14 @@
                     default:
                 }
                 keyboardControl = true;
-                console.log(dLight.position.x, dLight.position.y, dLight.position.z);
                 animate();  
             }  
 
             // change light by GUI controller
             function change() {
-                dLight.color.r = dLightText.color[0];
-                dLight.color.g = dLightText.color[1];
-                dLight.color.b = dLightText.color[2];
+                dLight.color.r = dLightText.color[0]/255;
+                dLight.color.g = dLightText.color[1]/255;
+                dLight.color.b = dLightText.color[2]/255;
                 dLight.position.x = dLightText.x;
                 dLight.position.y = dLightText.y;
                 dLight.position.z = dLightText.z;
@@ -198,12 +197,12 @@
                 sLight.color.r = sLightText.color[0];
                 sLight.color.g = sLightText.color[1];
                 sLight.color.b = sLightText.color[2];
-                sLight.position.x = sLightText.position_x;
-                sLight.position.y = sLightText.position_y;
-                sLight.position.z = sLightText.position_z;
+                sLight.position.x = sLightText.position_x*10;
+                sLight.position.y = sLightText.position_y*10;
+                sLight.position.z = sLightText.position_z*10;
                 sLight.angle = sLightText.angle;
                 
-                console.log(sLight.position, sLight.target.position);
+                console.log(dLight.color);
                 animate();
             }
 
